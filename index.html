@@ -1,0 +1,141 @@
+
+<html>
+<head>
+<script src="js/jquery.min.js" type="text/javascript"></script>
+<script src="js/bootstrap.min.js" type="text/javascript"></script>
+<link href="css/bootstrap.min.css"rel="stylesheet">
+<script type="text/javascript" src="phonegap.js"></script>
+<style type="text/css">
+span#time{text-align:center;}
+h1 { color:#a94442;
+  text-shadow: 0 1px 0 #ccc,
+               0 2px 0 #c9c9c9,
+               0 3px 0 #bbb,
+               0 4px 0 #b9b9b9,
+               0 5px 0 #aaa,
+               0 6px 1px rgba(0,0,0,.1),
+               0 0 5px rgba(0,0,0,.1),
+               0 1px 3px rgba(0,0,0,.3),
+               0 3px 5px rgba(0,0,0,.2),
+               0 5px 10px rgba(0,0,0,.25),
+               0 10px 10px rgba(0,0,0,.2),
+               0 20px 20px rgba(0,0,0,.15);
+}
+p#list{border-bottom-color:gray;}
+</style>
+</head>
+<body id='body'>
+<div class="col-md-4"></div>
+<div class="col-md-4">
+ <div id="todopan">
+<center>
+<h1>Time Scheduler</h1>
+<span id='time'></span></center>
+<input type="text" id="textin" class="form-control" placeholder="Your todo work.."/>
+<input type="hidden" id="nooftask"/>
+</div>
+<div class="row">
+        <div class="col-lg-12">
+            <ul class="nav nav-pills nav-justified">
+                
+                <li><a href="http://realphpapplication.blogspot.com">&copy; Hitesh Saini</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+ 
+</body>
+<script>
+var input= document.getElementById("textin");
+    input.addEventListener("keypress",action);
+setInterval(function(){document.getElementById("time").innerHTML=new Date();},1000);
+ 
+function action(evt)
+          {
+            var p,val,tt; 
+            if(evt.keyCode==13)
+               {
+                 if(input.value!='')
+                     {
+                       var val = prompt("Enter the minutes");
+                           if(/[0-9]+/.exec(val))
+                              {
+                               p = document.createElement("p");
+                 p.id="list";
+                 p.style="border:1px solid green";
+                 document.getElementById("nooftask").value++;
+                 p.innerHTML = "<h3><span class=\"badge\">#" +document.getElementById("nooftask").value + ".</span>   " +document.getElementById("textin").value+"</h3></li><p id='actionsicon'> is it complete ? <input type='checkbox' onclick='deleteit(this)'/> </p>";
+                 document.getElementById("todopan").appendChild(p);
+                             tt=  document.createElement("span");
+                             tt.id=val;
+                             
+                             p.appendChild(tt);
+                             remtime(tt);
+                            
+                              }else
+                               alert("fill the hour input first!!"); 
+                     }
+                  else
+                     alert("fill the note box first!!");
+  
+               }
+          }
+function deleteit(txt)
+         {
+              var audio = new Audio("I-Will-Always-Love-You.mp3");
+                  audio.play(); 
+                  var sure= confirm("have you really completed the task??");
+                  if(sure) 
+                  document.getElementById("todopan").removeChild(txt.parentElement.parentElement) ;     
+                  document.getElementById("nooftask").value--;
+                  audio.stop(); 
+          }
+function deleteitbyforce(txt){
+                  document.getElementById("todopan").removeChild(txt.parentElement) ;     
+                  document.getElementById("nooftask").value--;      
+        }
+function rgba()
+     {
+      var r = parseInt(Math.random()*200);
+      var g = parseInt(Math.random()*200);
+      var b = parseInt(Math.random()*200);
+      var a = Math.random()*10; 
+      return ("rgba("+r+","+g+","+b+","+a+")");     
+     }
+function remtime(tm){
+      var t=parseInt(tm.id);
+      var time;
+      var mins,hour,se,audio; 
+      var sec =parseInt(t)*60;
+      setInterval(function(){
+
+                              hour= parseInt(sec/(60*60));
+                              mins= parseInt((sec-hour*60*60)/60);
+                              se = sec%60;
+                              sec--; 
+                              var remaining=  parseInt((sec/(t*60))*100); 
+                              time = "Remaining Time: "+hour+":"+mins+":"+se; 
+                               if(hour==0&&mins<5){
+                                   
+                                 if(sec==0)
+                                 {
+                                   navigator.notification.vibrate( 5000 );   
+                                  alert("you are gonna be looser");
+                                  deleteitbyforce(tm);  
+                                  
+                                  }
+                                 setInterval(function(){tm.style.color=rgba();tm.style.backgroundColor="white";},400);
+                                 
+                                 
+                               tm.innerHTML=time+ "<div   class=\"progress\"><div id='prog' class=\"progress-bar\" role=\"progressbar\" aria-valuenow=\"2\" aria-valuemin=\"0\" aria-valuemax=\"100\" style=\"min-width:2em;width:"+remaining+"%; color:black;\">"+remaining+"%</div></div>";
+                                          
+                                   }
+                               else{
+                               tm.innerHTML=time+ "<div   class=\"progress\"><div id='prog' class=\"progress-bar\" role=\"progressbar\" aria-valuenow=\"2\" aria-valuemin=\"0\" aria-valuemax=\"100\" style=\"min-width:2em;width:"+remaining +"%; color:black;\">"+remaining+"%</div></div>";
+                                    
+                                    }
+                            },1000);
+                            }
+</script>
+
+</html>
